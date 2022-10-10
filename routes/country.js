@@ -5,13 +5,13 @@ var sanitizeHtml = require('sanitize-html');
 const { check, validationResult } = require('express-validator');
 
 /* GET all country. */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
     connection
-        .raw(`select * from university`)
+        .raw(`select * from country`)
         .then((result) => {
-            var university = result[0];
+            var country = result[0];
             res.json({
-                universitry: university
+                country: country
             });
         })
         .catch((error) => {
