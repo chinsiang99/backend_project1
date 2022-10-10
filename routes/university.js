@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var connection = require('../database.js');
+var sanitizeHtml = require('sanitize-html');
 const { check, validationResult } = require('express-validator');
 
 /* GET all university. */
@@ -56,7 +57,7 @@ router.get('/:id',
 
     });
 
-/* GET university with id */
+/* create new university with id */
 router.post('/',
     function (req, res, next) {
         connection
