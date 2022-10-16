@@ -57,21 +57,20 @@ router.get('/:id',
 
     });
 
-/* create new university with id */
+/* insert new university record */
 router.post('/',
-    function (req, res, next) {
+    (req, res, next) => {
         connection
-            .raw(`insert into `, req.params.id)
+            .raw(`insert into university(university_name, country) values (?,?)`, [req.body.university_name, req.body.country_id])
             .then((result) => {
-                var university = result[0];
-                console.log(university);
-                if (university.length == 0) {
+                var country = result[0];
+                if (country.length == 0) {
                     res.json({
-                        message: "no record found"
+                        message: "failed to create a new country"
                     })
                 } else {
                     res.json({
-                        universitry: university
+                        country: country
                     });
                 }
 
@@ -82,30 +81,79 @@ router.post('/',
                     "message": error
                 })
             })
-
-
     });
 
-/* List manufacturers */
-router.get('/manufacturers', function (req, res, next) {
-    //knex connection
-    connection
-        .raw(`select * from manufacturer;`) // it is a promise
-        .then(function (result) {
-            var manufacturers = result[0];
-            // send back the query result as json
-            res.json({
-                manufacturers: manufacturers,
-            });
-        })
-        .catch(function (error) {
-            // log the error
-            console.log(error);
-            res.json(500, {
-                "message": error
-            });
-        });
-});
+/* update existing university record */
+router.put('/:id',
+    check('id', "Invalid route param").isInt(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        connection
+            .raw(`select * from university where id = ?`, req.params.id)
+            .then((result) => {
+                var count = result[0];
+                if (count.length > 0) {
+                    connection
+                        .raw(`update university set university_name = ?, country = ? where id = ? `, [req.body.university_name, req.body.country, req.params.id])
+                        .then((result) => {
+                            var count = result[0];
+                            return res.json({
+                                message: count
+                            })
+                        })
+                        .catch((error) => {
+                            return res.status(500).json({
+                                message: error
+                            })
+                        })
+                } else {
+                    return res.json({
+                        message: "No specific record found"
+                    })
+                }
+            })
+    });
+
+/* delete existing country record with id */
+router.delete('/:id',
+    check('id', "Invalid route param").isInt(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        connection
+            .raw(`select * from university where id = ?`, req.params.id)
+            .then((result) => {
+                var count = result[0];
+                if (count.length > 0) {
+                    connection
+                        .raw(`delete from university where id = ? `, [req.params.id])
+                        .then((result) => {
+                            var count = result[0];
+                            return res.json({
+                                message: count
+                            })
+                        })
+                        .catch((error) => {
+                            return res.status(500).json({
+                                message: error
+                            })
+                        })
+                } else {
+                    return res.json({
+                        message: "No specific record found"
+                    })
+                }
+            })
+    });
 
 
 
