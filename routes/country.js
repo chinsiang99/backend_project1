@@ -60,7 +60,7 @@ router.post('/',
     (req, res, next) => {
 
         connection
-            .raw(`insert into country(country_name) values (?)`, req.body.name)
+            .raw(`insert into country(country_name) values (?)`, sanitizeHtml(req.body.name))
             .then((result) => {
                 var country = result[0];
                 if (country.length == 0) {
@@ -98,7 +98,7 @@ router.put('/:id',
                 var count = result[0];
                 if (count.length > 0) {
                     connection
-                        .raw(`update country set country_name = ? where id = ? `, [req.body.name, req.params.id])
+                        .raw(`update country set country_name = ? where id = ? `, [sanitizeHtml(req.body.name), req.params.id])
                         .then((result) => {
                             var count = result[0];
                             return res.json({

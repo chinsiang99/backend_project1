@@ -61,7 +61,7 @@ router.get('/:id',
 router.post('/',
     (req, res, next) => {
         connection
-            .raw(`insert into university(university_name, country) values (?,?)`, [req.body.university_name, req.body.country_id])
+            .raw(`insert into university(university_name, country) values (?,?)`, [sanitizeHtml(req.body.university_name), sanitizeHtml(req.body.country_id)])
             .then((result) => {
                 var country = result[0];
                 if (country.length == 0) {
@@ -99,7 +99,7 @@ router.put('/:id',
                 var count = result[0];
                 if (count.length > 0) {
                     connection
-                        .raw(`update university set university_name = ?, country = ? where id = ? `, [req.body.university_name, req.body.country, req.params.id])
+                        .raw(`update university set university_name = ?, country = ? where id = ? `, [sanitizeHtml(req.body.university_name), sanitizeHtml(req.body.country), req.params.id])
                         .then((result) => {
                             var count = result[0];
                             return res.json({
