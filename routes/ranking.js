@@ -67,7 +67,7 @@ router.post('/',
                 var university_ranking_year = result[0];
                 if (university_ranking_year.length == 0) {
                     res.json({
-                        message: "failed to create a new country"
+                        message: "failed to create a new record"
                     })
                 } else {
                     res.json({
@@ -85,8 +85,10 @@ router.post('/',
     });
 
 /* update existing university ranking */
-router.put('/:id',
-    check('id', "Invalid route param").isInt(),
+router.put('/:year/:university_id/:country_id',
+    check('year', "Invalid route param").isInt(),
+    check('university_id', "Invalid route param").isInt(),
+    check('country_id', "Invalid route param").isInt(),
     (req, res, next) => {
         const errors = validationResult(req);
 
@@ -95,12 +97,12 @@ router.put('/:id',
         }
 
         connection
-            .raw(`select * from university where id = ?`, req.params.id)
+            .raw(`select * from university_ranking_year where ranking_year = ? and university_id = ? and country_id = ?`, [req.params.year, req.params.university_id, req.params.country_id])
             .then((result) => {
                 var count = result[0];
                 if (count.length > 0) {
                     connection
-                        .raw(`update university set university_name = ?, country = ? where id = ? `, [sanitizeHtml(req.body.university_name), sanitizeHtml(req.body.country), req.params.id])
+                        .raw(`update university_ranking_year set world_rank = ?, university_id = ?, country_id = ?, national_rank = ?, quality_of_education = ?, score = ?, ranking_year = ? where ranking_year = ? and university_id = ? and country_id = ?  `, [sanitizeHtml(req.body.world_rank), sanitizeHtml(req.body.university_id), sanitizeHtml(req.body.country_id), sanitizeHtml(req.body.national_rank), sanitizeHtml(req.body.quality_of_education), sanitizeHtml(req.body.score), sanitizeHtml(req.body.ranking_year), req.params.year, req.params.university_id, req.params.country_id])
                         .then((result) => {
                             var count = result[0];
                             return res.json({
@@ -120,9 +122,11 @@ router.put('/:id',
             })
     });
 
-/* delete existing university ranking record with id */
-router.delete('/:id',
-    check('id', "Invalid route param").isInt(),
+/* delete existing university ranking record with ranking_year, university_id, country_id */
+router.delete('/:year/:university_id/:country_id',
+    check('year', "Invalid route param").isInt(),
+    check('university_id', "Invalid route param").isInt(),
+    check('country_id', "Invalid route param").isInt(),
     (req, res, next) => {
         const errors = validationResult(req);
 
@@ -131,12 +135,12 @@ router.delete('/:id',
         }
 
         connection
-            .raw(`select * from university where id = ?`, req.params.id)
+            .raw(`select * from university_ranking_year where ranking_year = ? and university_id = ? and country_id = ?`, [req.params.year, req.params.university_id, req.params.country_id])
             .then((result) => {
                 var count = result[0];
                 if (count.length > 0) {
                     connection
-                        .raw(`delete from university where id = ? `, [req.params.id])
+                        .raw(`delete from university_ranking_year where ranking_year = ? and university_id = ? and country_id = ? `, [req.params.year, req.params.university_id, req.params.country_id])
                         .then((result) => {
                             var count = result[0];
                             return res.json({
