@@ -58,7 +58,6 @@ router.get('/:id',
 /* insert new country record */
 router.post('/',
     (req, res, next) => {
-        const errors = validationResult(req);
 
         connection
             .raw(`insert into country(country_name) values (?)`, req.body.name)
@@ -80,6 +79,42 @@ router.post('/',
                 res.json(500, {
                     "message": error
                 })
+            })
+    });
+
+/* update existing country record */
+router.put('/:id',
+    check('id', "Invalid route param").isInt(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        connection
+            .raw(`select * from country where id = ?`, req.params.id)
+            .then((result) => {
+                var count = result[0];
+                if (count.length > 0) {
+                    connection
+                        .raw(`update country set country_name = ? where id = ? `, [req.body.name, req.params.id])
+                        .then((result) => {
+                            var count = result[0];
+                            return res.json({
+                                message: count
+                            })
+                        })
+                        .catch((error) => {
+                            return res.status(500).json({
+                                message: error
+                            })
+                        })
+                } else {
+                    return res.json({
+                        message: "No specific record found"
+                    })
+                }
             })
     });
 
