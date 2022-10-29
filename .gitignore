@@ -1,2 +1,3 @@
 #ignore knex file
 /knexfile.js
+/node_modules
