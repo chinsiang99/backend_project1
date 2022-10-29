@@ -16,8 +16,6 @@ router.get('/manufacturers', function (req, res, next) {
       });
     })
     .catch(function (error) {
-      // log the error
-      console.log(error);
       res.json(500, {
         "message": error
       });

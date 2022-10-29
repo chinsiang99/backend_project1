@@ -15,7 +15,6 @@ router.get('/', function (req, res, next) {
             });
         })
         .catch((error) => {
-            console.log(error);
             res.json(500, {
                 "message": error
             })
@@ -35,7 +34,6 @@ router.get('/:id',
             .raw(`select * from university where id = ?`, req.params.id)
             .then((result) => {
                 var university = result[0];
-                console.log(university);
                 if (university.length == 0) {
                     res.json({
                         message: "no record found"
@@ -48,7 +46,6 @@ router.get('/:id',
 
             })
             .catch((error) => {
-                console.log(error);
                 res.json(500, {
                     "message": error
                 })
@@ -76,7 +73,6 @@ router.post('/',
 
             })
             .catch((error) => {
-                console.log(error);
                 res.json(500, {
                     "message": error
                 })

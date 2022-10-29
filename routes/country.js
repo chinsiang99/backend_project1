@@ -15,7 +15,6 @@ router.get('/', (req, res, next) => {
             });
         })
         .catch((error) => {
-            console.log(error);
             res.json(500, {
                 "message": error
             })
@@ -48,7 +47,6 @@ router.get('/:id',
 
             })
             .catch((error) => {
-                console.log(error);
                 res.json(500, {
                     "message": error
                 })
@@ -75,7 +73,6 @@ router.post('/',
 
             })
             .catch((error) => {
-                console.log(error);
                 res.json(500, {
                     "message": error
                 })

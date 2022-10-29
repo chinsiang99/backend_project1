@@ -15,7 +15,6 @@ router.get('/', function (req, res, next) {
             });
         })
         .catch((error) => {
-            console.log(error);
             res.json(500, {
                 "message": error
             })
@@ -36,7 +35,6 @@ router.get('/:year/:ranking',
             .raw(`select world_rank, university.university_name as university_name, country.country_name as country_name, national_rank, quality_of_education, score, ranking_year, university_id, country_id from university_ranking_year inner join university on university_ranking_year.university_id = university.id inner join country on university_ranking_year.country_id = country.id where ranking_year = ? and world_rank = ?`, [req.params.year, req.params.ranking])
             .then((result) => {
                 var university_ranking_year = result[0];
-                console.log(university_ranking_year);
                 if (university_ranking_year.length == 0) {
                     res.json({
                         message: "no record found"
@@ -49,7 +47,6 @@ router.get('/:year/:ranking',
 
             })
             .catch((error) => {
-                console.log(error);
                 res.json(500, {
                     "message": error
                 })
@@ -77,7 +74,6 @@ router.post('/',
 
             })
             .catch((error) => {
-                console.log(error);
                 res.json(500, {
                     "message": error
                 })
