@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -18,6 +19,7 @@
     "knex": "^2.3.0",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
     "sanitize-html": "^2.7.2",
     "sequelize": "^6.25.8"
   },
